@@ -1,9 +1,21 @@
 workflows:
-
-    sample-workflow:
-
-        name: Codemagic Sample Workflow
-
-        max_build_duration: 120
-
-        instance_type: mac_mini_m2
+  android-workflow:
+    name: Flutter Android Workflow
+    max_build_duration: 60
+    instance_type: linux_x64
+    environment:
+      flutter: stable
+      android_signing:
+        - keystore_reference # Optional: if you configure code signing in Codemagic
+    scripts:
+      - name: Install dependencies
+        script: |
+          flutter pub get
+      - name: Run tests (optional)
+        script: |
+          flutter test
+      - name: Build Android APK
+        script: |
+          flutter build apk --release
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
